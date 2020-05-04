@@ -64,7 +64,8 @@ def get_F_optimized(x):
         FR.append(sum([w[(i*j)%N][0]*x[j] for j in range(N)]))
         Fi.append(sum([w[(i*j)%N][1]*x[j] for j in range(N)]))
     return FR, Fi
-
+def maketable(x,y,i):
+    x.append(round(y[i*round(N/10)],2))
 n = 8
 omega = 1100
 N = 256
@@ -79,30 +80,29 @@ x = [x_gen(i) for i in range(N)]
 
 F = [FR[i] + Fi[i] for i in range(N)]
 
-fig = plt.figure()
-fig2 = plt.figure()
-
-ax_1 = fig.add_subplot(3, 1, 1)
-ax_2 = fig.add_subplot(3, 1, 2)
-ax_3 = fig.add_subplot(3, 1, 3)
-
-ax_4 = fig2.add_subplot(3, 1, 1)
-ax_5 = fig2.add_subplot(3, 1, 2)
-ax_6 = fig2.add_subplot(3, 1, 3)
-
-
-ax_1.plot(range(N), FR)
-ax_2.plot(range(N), Fi)
-ax_3.plot(range(N), FR1)
-ax_4.plot(range(N), Fi1)
-ax_5.plot(range(N), x)
-ax_6.plot(range(N), F)
-
-ax_1.set(title='FR')
-ax_2.set(title='Fi')
-ax_3.set(title='FR_opt')
-ax_4.set(title='Fi_opt')
-ax_5.set(title='x')
-ax_6.set(title='F')
-
+Ntable = []
+FRtable = []
+Fitable = []
+FR1table = []
+Fi1table = []
+Ftable = []
+xtable = []
+rows = ["FR", "Fi", "FR1", "Fi1", "x", "F"]
+barcord = []
+barheight = []
+for i in range(round(N/25)):
+    Ntable.append(i*round(N/10))
+    maketable(FRtable, FR, i)
+    maketable(Fitable, Fi1, i)
+    maketable(FR1table, FR1, i)
+    maketable(Fi1table, Fi1, i)
+    maketable(xtable, x, i)
+    maketable(Ftable, F, i)
+    barcord.append(Ntable[i])
+    barheight.append(FRtable[i]+FR1table[i]+Fitable[i]+Fi1table[i]+Ftable[i]+x[i])
+for row in range(len(Ntable)):
+    plt.bar(barcord, barheight, width=20)
+tabletext = [FRtable, Fitable, FR1table, Fi1table, xtable, Ftable]
+the_table = plt.table(cellText=tabletext,rowLabels=rows,colLabels=Ntable)
+plt.subplots_adjust(left=0.2, bottom=0.2)
 plt.show()
